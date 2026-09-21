@@ -25,6 +25,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
+    - name: Set Gradle Wrapper to a stable version
+      run: ./gradlew wrapper --gradle-version 8.5
+      
     - name: Decode keystore
       if: github.event_name != 'pull_request'
       run: |
@@ -57,7 +60,7 @@ jobs:
         retention-days: 90
         
     - name: Create Release on Tag
-      if: startsWith(github.ref, 'refs/tags/')
+      if: startsWith(github.ref, 'refs/tags/') && hashFiles('app/build/outputs/apk/release/app-release.apk') != ''
       uses: softprops/action-gh-release@v1
       with:
         files: |
